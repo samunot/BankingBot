@@ -1,4 +1,4 @@
-var auth_slack_token = "xoxb-267111720244-cnnkjMqJ9GcNrycnvygUqw1O";
+var auth_slack_token = "xoxb-267111720244-Nl7zxAi7wOteksaniPdDKAqE";
 
 
 function getUserName(email_id, callback) {

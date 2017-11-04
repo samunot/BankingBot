@@ -1,4 +1,4 @@
-var api_key = "7184706313e2712e40b2e1a4c79470f3";
+var api_key = "f22fbdf4ed3dd8d28f4fc96039514ba2";
 var url_root = "http://api.reimaginebanking.com";
 var request = require('request');
 var id = "59fdf5ccb390353c953a1bf8";
@@ -14,11 +14,15 @@ function getAllCustomers(callback) {
 }
 
 function getCustomerID(fname, lname, callback) {
-    getAllAccounts(function(clist) {
-        for (i = 0; i < clist; i++) {
-            clist[i] = JSON.parse(clist[i]);
+    getAllCustomers(function(clist) {
+        clist = JSON.parse(clist)
+        for (i = 0; i < clist.length; i++) {
+            // clist[i] = JSON.parse(clist[i]);
+            // console.log("vikasffff2");
             if (fname == clist[i].first_name && lname == clist[i].last_name) {
-                callback(clist[i]._id)
+                console.log("vikasffff3");
+                callback(clist[i]._id);
+                break;
             }
         }
     })
@@ -40,6 +44,7 @@ function getAllAccounts(callback) {
         method: 'GET',
     }
     request(options, function(error, response, body) {
+        console.log("vikasffff1");
         callback(response.body);
     });
 }
@@ -67,8 +72,9 @@ function updateAccount(id, data, callback) {
 
 function getAccountID(custid, type, callback) {
     getAllAccounts(function(alist) {
-        for (i = 0; i < clist; i++) {
-            alist[i] = JSON.parse(alist[i]);
+        alist = JSON.parse(alist);
+        for (i = 0; i < alist.length; i++) {
+            // alist[i] = JSON.parse(alist[i]);
             if (custid == alist[i].customer_id && type == alist[i].type) {
                 callback(alist[i]._id)
             }
@@ -163,14 +169,47 @@ function getTransfer(transferId, callback) {
 function createTransfer(id, data, callback) {
     options = {
         url: `${url_root}/accounts/{id}/transfers?key=${api_key}`,
-        method: 'GET',
+        method: 'POST',
         body: data
     }
     request(options, function(error, response, body) {
-        callback(response.body);
+        callback(error);
     })
 }
+data = {"medium": "balance",
+"payee_id": "59fe03c8b390353c953a1c03",
+"amount": 100.00}
+createTransfer("59fe0589b390353c953a1c0c",data,function(body){
+    console.log(body)
+})
 
+/*
 getCustomer(id, function(cust) {
     console.log(cust);
 });
+*/
+
+/*
+getCustomerID("Vikas","Pandey",function(body){
+    console.log(body)
+})
+*/
+exports.getCustomer = getCustomer;
+exports.createTransfer = createTransfer;
+exports.getTransfer = getTransfer;
+exports.getAllTransfers = getAllTransfers;
+exports.getPurcahse = getPurcahse;
+exports.getAllPurchasesByAccountID = getAllPurchasesByAccountID;
+exports.getAllPurchasesByMerchantID = getAllPurchasesByMerchantID;
+exports.makePurchase = makePurchase;
+exports.getMerchant = getMerchant;
+
+exports.getAllMerchants = getAllMerchants;
+exports.getAccountID = getAccountID;
+exports.updateAccount = updateAccount;
+
+exports.getCustomerID = getCustomerID;
+exports.getCustomer = getCustomer;
+exports.getAllAccounts = getAllAccounts;
+exports.getAccount = getAccount;
+exports.getAllCustomers = getAllCustomers;

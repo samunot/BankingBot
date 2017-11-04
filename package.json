@@ -1,0 +1,23 @@
+{
+  "name": "hacknc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "dependencies": {
+    "botkit": "^0.6.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samunot/hacknc.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/samunot/hacknc/issues"
+  },
+  "homepage": "https://github.com/samunot/hacknc#readme"
+}

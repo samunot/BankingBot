@@ -5,7 +5,7 @@ var id = "59fdf5ccb390353c953a1bf8";
 
 function getAllCustomers(callback) {
     options = {
-        url: url_root + "/customers?key=" + api_key,
+        url: `${url_root}/customers?key=${api_key}`,
         method: 'GET',
     }
     request(options, function(error, response, body) {
@@ -23,6 +23,27 @@ function getCustomer(id, callback) {
     })
 }
 
+function getAllAccounts(callback) {
+    options = {
+        url: `${url_root}/accounts?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getAccount(id, callback) {
+    options = {
+        url: `${url_root}/customers/${id}/accounts?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function updateAccount()
 // getAllCustomers(function(cust) {
 //     console.log(cust);
 // });

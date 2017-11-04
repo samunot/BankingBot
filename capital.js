@@ -48,6 +48,27 @@ function updateAccount()
 //     console.log(cust);
 // });
 
+function getAllTransfers(callback) {
+    options = {
+        url: `${url_root}/accounts/${id}/transfers?key=${api_key}`,
+        method: 'GET'
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getTransfer(id, callback) {
+    options = {
+        url: `${url_root}/transfers/${transferId}?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    })
+}
+
+
 getCustomer(id, function(cust) {
     console.log(cust);
 });

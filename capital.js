@@ -171,6 +171,10 @@ function createTransfer(id, data, callback) {
     })
 }
 
-getCustomer(id, function(cust) {
-    console.log(cust);
-});
+// getCustomer(id, function(cust) {
+//     console.log(cust);
+// });
+
+// getAllMerchants(function(body) {
+//     console.log(body);
+// })

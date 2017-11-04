@@ -13,6 +13,17 @@ function getAllCustomers(callback) {
     });
 }
 
+function getCustomerID(fname, lname, callback) {
+    getAllAccounts(function(clist) {
+        for (i = 0; i < clist; i++) {
+            clist[i] = JSON.parse(clist[i]);
+            if (fname == clist[i].first_name && lname == clist[i].last_name) {
+                callback(clist[i]._id)
+            }
+        }
+    })
+}
+
 function getCustomer(id, callback) {
     options = {
         url: `${url_root}/customers/${id}?key=${api_key}`,
@@ -43,11 +54,92 @@ function getAccount(id, callback) {
     });
 }
 
-function updateAccount()
+function updateAccount(id, data, callback) {
+    options = {
+        url: `${url_root}/accounts/${id}?key=${api_key}`,
+        method: 'PUT',
+        body: data
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getAccountID(custid, type, callback) {
+    getAllAccounts(function(alist) {
+        for (i = 0; i < clist; i++) {
+            alist[i] = JSON.parse(alist[i]);
+            if (custid == alist[i].customer_id && type == alist[i].type) {
+                callback(alist[i]._id)
+            }
+        }
+    })
+}
+
+function getAllMerchants(callback) {
+    options = {
+        url: `${url_root}/merchants?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getMerchant(id, callback) {
+    options = {
+        url: `${url_root}/merchants/${id}?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function makePurchase(accountID, data, callback) {
+    options = {
+        url: `${url_root}/accounts/${accountID}/purchases?key=${api_key}`,
+        method: 'POST',
+        body: data
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getAllPurchasesByMerchantID(merchantID, callback) {
+    options = {
+        url: `${url_root}/merchants/${merchantID}/purchases?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getAllPurchasesByAccountID(accountID, callback) {
+    options = {
+        url: `${url_root}/accounts/${accountID}/purchases?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
+
+function getPurcahse(id, callback) {
+    options = {
+        url: `${url_root}/purchases/${id}?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        callback(response.body);
+    });
+}
 // getAllCustomers(function(cust) {
 //     console.log(cust);
 // });
 
-getCustomer(id, function(cust) {
-    console.log(cust);
-});
+// getCustomer(id, function(cust) {
+//     console.log(cust);
+// });

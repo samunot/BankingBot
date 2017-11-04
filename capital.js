@@ -167,22 +167,31 @@ function getTransfer(transferId, callback) {
 }
 
 function createTransfer(id, data, callback) {
-    options = {
-        url: `${url_root}/accounts/{id}/transfers?key=${api_key}`,
+    var options = {
+        headers :{"Content-Type": "application/json","Accept": "application/json"},
+        url: `${url_root}/accounts/${id}/transfers?key=${api_key}`,
         method: 'POST',
-        body: data
+        body: JSON.stringify(data)
     }
     request(options, function(error, response, body) {
-        callback(error);
+        console.log(response.body);
+        callback(JSON.parse(response.body));
     })
 }
-data = {"medium": "balance",
+
+/*
+var sample_data = 
+{"medium": "balance",
 "payee_id": "59fe03c8b390353c953a1c03",
-"amount": 100.00}
-createTransfer("59fe0589b390353c953a1c0c",data,function(body){
+"amount": 100,
+"transaction_date": "2017-11-04",
+"description": "string"}
+
+createTransfer("59fe0589b390353c953a1c0c",sample_data,function(body){
     console.log(body)
 })
 
+*/
 /*
 getCustomer(id, function(cust) {
     console.log(cust);

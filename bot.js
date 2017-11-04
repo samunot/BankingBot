@@ -1,5 +1,5 @@
 var capital = require("./capital.js");
-var slackToken = "xoxb-267111720244-cnnkjMqJ9GcNrycnvygUqw1O";
+var slackToken = "xoxb-267111720244-Nl7zxAi7wOteksaniPdDKAqE";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
 var controller = Botkit.slackbot({
@@ -109,6 +109,7 @@ controller.hears('Transfer money', 'direct_mention,direct_message', function(bot
                                                     "description": "string"};
                                                     
                                                     capital.createTransfer(senderAccountID, options , function(response){
+                                                        
                                                         if(response.code == 201){
                                                             bot.reply(message," You have successfully sent "+sendMoney+" money to "+ recipient);
                                                         }

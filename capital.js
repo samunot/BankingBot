@@ -253,8 +253,5 @@ exports.getAllAccounts = getAllAccounts;
 exports.getAccount = getAccount;
 exports.getAllCustomers = getAllCustomers;
 
-<<<<<<< HEAD
 exports.deposit = deposit;
-=======
 exports.getAccountByAccountId = getAccountByAccountId;
->>>>>>> 79edbc8d38ae6e295c291b5adf5fe9d1ab11c1dd

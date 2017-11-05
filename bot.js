@@ -3,16 +3,11 @@ var async = require('async');
 var slackToken = "xoxb-267111720244-y8buNECTAQMNJox8f6zrRF4M";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
-var Table = require('cli-table');
-var couponsdb = require('./coupondb.json')
 var coupons = couponsdb.data;
 var controller = Botkit.slackbot({
     debug: false
-        //include "log: false" to disable logging
-        //or a "logLevel" integer from 0 to 7 to adjust logging verbosity
 });
 controller.spawn({
-    // token: process.env.SLACKTOKEN
     token: slackToken
 }).startRTM()
 var count = 0
@@ -28,17 +23,9 @@ function getRandom() {
 var ids = ['59fe647cb390353c953a1e81', '59fe64a6b390353c953a1e83', '59fe64beb390353c953a1e84', '59fe64d3b390353c953a1e85'];
 var names = ['Vikas Pandey', 'Shubham Munot', 'Harsha Reddy', 'Rishi Jain'];
 
-
-
 controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
     started = true;
     userName = message.user;
-    // slackUser.getName(message.user, function(name) {
-    //     if (name) {
-    //         userName = name;
-
-    //     }
-    // });
     slack.getFullName(userName, function(fullName) {
         if (fullName != null) {
             var firstlast = fullName.split(" ");
@@ -51,7 +38,6 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
 
                     senderCustomerID = customerId;
                 }
-
                 bot.startConversation(message, function(err, convo) {
                     bot.reply(message, 'Hi' + '<@' + message.user + '>..Let\'s get started \n Type exit at any moment to quit the chat.');
                     convo.addQuestion("Generate Transactions", function(answer, convo) {
@@ -60,7 +46,6 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
                         capital.getAccountID(senderCustomerID, "Credit Card", function(accid) {
                             if (accid != null) {
                                 senderAccountID = accid;
-
                                 capital.getAllMerchants(function(body) {
                                     body = JSON.parse(body)
                                     for (i = 0; i < body.data.length; i++) {
@@ -74,20 +59,16 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
                                         body = {
                                             "merchant_id": merchants[pos],
                                             "medium": "balance",
-                                            // "purchase_date": "2017-11-05",
                                             "amount": ceil
                                         }
                                         capital.makePurchase(senderAccountID, body, function(body) {
                                             capital.getAccountID(senderCustomerID, "Savings", function(saveID) {
-                                                capital.deposit(saveID, { medium: "balance", amount: save }, function(body) {
-                                                    console.log(body)
-                                                })
+                                                capital.deposit(saveID, { medium: "balance", amount: save }, function(body) {})
                                             })
                                         })
                                     }
                                     capital.getAccountID(senderCustomerID, "Savings", function(saveID) {
                                         capital.getAccountByAccountId(saveID, function(body) {
-                                            // body = JSON.parse(body)
                                             if (body.balance >= target) {
                                                 slack.getAllUserNames(function(users) {
                                                     for (k = 0; k < users.length; k++) {
@@ -105,8 +86,6 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
                                     convo.next();
                                 })
                             }
-
-
                         })
                     })
                     convo.on('end', function(convo) {
@@ -115,25 +94,15 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
                             convo.stop();
                         }
                     })
-
-
                 })
             })
         }
     })
 });
 
-
 controller.hears('Send money', 'direct_mention,direct_message', function(bot, message) {
     started = true;
     userName = message.user;
-    // slackUser.getName(message.user, function(name) {
-    //     if (name) {
-    //         userName = name;
-
-    //     }
-    // });
-
     slack.getFullName(userName, function(fullName) {
         if (fullName != null) {
             var firstlast = fullName.split(" ");
@@ -149,13 +118,10 @@ controller.hears('Send money', 'direct_mention,direct_message', function(bot, me
                     convo.next();
                     convo.addQuestion("Whom would you like to send money? Please enter full name", function(answer, convo) {
                         var recipient = answer.text;
-
                         var firstlastReceiver = recipient.split(" ");
-
                         capital.getCustomerID(firstlastReceiver[0], firstlastReceiver[1], function(customerIdReceiver) {
                             if (customerIdReceiver != null) {
                                 recieverCustomerID = customerIdReceiver;
-                                console.log("shu");
                                 convo.next();
                                 convo.addQuestion("How much yould you like to send? ", function(answer, convo) {
                                     var sendMoney = answer.text;
@@ -182,16 +148,12 @@ controller.hears('Send money', 'direct_mention,direct_message', function(bot, me
                                                         convo.next();
                                                     })
                                                 }
-
                                             })
                                         }
                                     })
-
                                 })
-
                             }
                         })
-
                     })
                     convo.on('end', function(convo) {
                         if (convo.status == "completed") {
@@ -204,21 +166,11 @@ controller.hears('Send money', 'direct_mention,direct_message', function(bot, me
             })
         }
     })
-
-
-
 });
 
 controller.hears('Give account summary', 'direct_mention,direct_message', function(bot, message) {
     started = true;
     userName = message.user;
-    // slackUser.getName(message.user, function(name) {
-    //     if (name) {
-    //         userName = name;
-
-    //     }
-    // });
-
     slack.getFullName(userName, function(fullName) {
         if (fullName != null) {
             var firstlast = fullName.split(" ");
@@ -227,34 +179,18 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
             var senderCustomerID = null
             capital.getCustomerID(firstNameSender, lastNameSender, function(customerId) {
                 if (customerId != null) {
-
                     senderCustomerID = customerId;
                 }
                 capital.getAccount(senderCustomerID, function(acc_details) {
                     bot.startConversation(message, function(err, convo) {
-                        console.log(acc_details);
-                        //bot.reply(message, "Account Number: \tType: \t\tBalance "); 
-
-
-
-
                         async.eachSeries(acc_details, function(acc, callback) {
-                            //console.log(expert);
                             bot.reply(message, "Account number: " + acc.account_number + "\n Account type: " + acc.type + "\n Balance: " + acc.balance, function() {
                                 callback();
                             });
-                            // Alternatively: callback(new Error());
                         }, function(callback) {
-
                             bot.reply(message, "Spend more.. Save more..:heavy_dollar_sign::smile:");
                             convo.stop();
-
-
                         })
-
-
-
-
                     })
                 })
             })
@@ -263,9 +199,7 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
 
 });
 
-
-
-controller.hears('What about my Savings Circle?', 'direct_mention,direct_message', function(bot, message) {
+controller.hears('savings circle', 'direct_mention,direct_message', function(bot, message) {
     userName = message.user;
     bot.startConversation(message, function(err, convo) {
         var savingDetails = [];
@@ -286,136 +220,3 @@ controller.hears('What about my Savings Circle?', 'direct_mention,direct_message
         })
     });
 });
-
-
-
-
-// controller.hears('recommend coupons', 'direct_mention,direct_message', function(bot, message) {
-//     userName = message.user;
-//     // slackUser.getName(message.user, function(name) {
-//     //     if (name) {
-//     //         userName = name;
-
-//     //     }
-//     // });
-//     slack.getFullName(userName, function(fullName) {
-//         if (fullName != null) {
-//             var firstlast = fullName.split(" ");
-//             var firstName = firstlast[0];
-//             var lastName = firstlast[1];
-//             var senderCustomerID = null
-//                 // var recieverCustomerID = null
-//             capital.getCustomerID(firstName, lastName, function(customerId) {
-//                 if (customerId != null) {
-
-//                     senderCustomerID = customerId;
-//                 }
-
-//                 bot.startConversation(message, function(err, convo) {
-//                     capital.getAccountID(senderCustomerID, "Credit Card", function(accid) {
-//                             if (accid != null) {
-//                                 senderAccountID = accid;
-
-//                                 capital.getAllPurchasesByAccountID(accid, function(body) {
-//                                     body = JSON.parse(body)
-//                                     merchants = []
-
-//                                     for (k = 0; k < 10; k++) {
-//                                         // async.each(body, function(item, callback) {
-//                                         // if (count == 3) {
-//                                         //     callback(err)
-//                                         // }
-//                                         // merchants.push(body[i].merchant_id)
-//                                         outer(body, k, count, function() {
-//                                             convo.next;
-//                                         })
-//                                     }
-
-//                                     // if (categorySet.size > 2) {
-//                                     //     console.log(categorySet);
-//                                     //     categories = Array.from(categorySet);
-//                                     //     for (m = 0; m < 3; m++) {
-//                                     //         var cat = categories[Math.floor(Math.random() * categories.length)];
-//                                     //         coupons = couponsdb.data;
-//                                     //         for (n = 0; n < coupons.length; n++) {
-//                                     //             couponCat = coupons[i].category
-//                                     //             for (l = 0; l < couponCat.length; l++) {
-//                                     //                 if (couponCat[l] == cat) {
-//                                     //                     bot.reply(message, `You got a coupon from ${coupons[i].merchant_name} for a discount of ${coupons[i].discount}%`)
-//                                     //                     n = coupons.length
-//                                     //                     break;
-//                                     //                 }
-//                                     //             }
-
-//                                     //         }
-//                                     //     }
-//                                     // }
-
-//                                 })
-
-//                             }
-
-
-
-//                         })
-//                         // convo.next();
-//                     convo.on('end', function(convo) {
-//                         if (convo.status == "completed") {
-//                             // bot.reply(message, "End of test");
-//                             for (i = 0; i < 3; i++) {
-//                                 bot.reply(message, finalcoupons[i])
-//                             }
-//                             convo.stop();
-//                         }
-//                     })
-
-
-//                 })
-//             })
-//         }
-//     })
-// });
-
-// function inner(cat, coupons, n) {
-//     couponCat = coupons[n].category[0]
-//         // for (l = 0; l < couponCat.length; l++) {
-//     if (couponCat == cat) {
-//         finalcoupons.push(`You got a coupon from ${coupons[n].merchant_name} for a discount of ${coupons[n].discount}%`);
-//         // count += 1;
-//         // if (count == 3) {
-//         //     // convo.stop();
-//         //     // callback(err);
-//         //     // break;
-//         //     convo.next();
-//         // }
-//         // // callback();
-//         // break;
-//     }
-// }
-
-// function outer(body, k, callback) {
-//     capital.getMerchant(body[k].merchant_id, function(merchantData) {
-//         merchantData = JSON.parse(merchantData)
-//         var cat = merchantData.category[0]
-//         for (n = 0; n < coupons.length; n++) {
-//             // couponCat = coupons[n].category[0]
-//             //     // for (l = 0; l < couponCat.length; l++) {
-//             // if (couponCat == cat) {
-//             //     finalcoupons.push(`You got a coupon from ${coupons[n].merchant_name} for a discount of ${coupons[n].discount}%`);
-//             //     count += 1;
-//             //     if (count == 3) {
-//             //         // convo.stop();
-//             //         // callback(err);
-//             //         // break;
-//             //         convo.next();
-//             //     }
-//             //     // callback();
-//             //     break;
-//             // }
-//             inner(cat, coupons, n)
-//         }
-//         // convo.next();
-
-//     });
-//     callback()
-// }

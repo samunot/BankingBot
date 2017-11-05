@@ -17,10 +17,7 @@ function getCustomerID(fname, lname, callback) {
     getAllCustomers(function(clist) {
         clist = JSON.parse(clist)
         for (i = 0; i < clist.length; i++) {
-            // clist[i] = JSON.parse(clist[i]);
-            // console.log("vikasffff2");
             if (fname == clist[i].first_name && lname == clist[i].last_name) {
-                console.log("vikasffff3");
                 callback(clist[i]._id);
                 break;
             }
@@ -44,7 +41,6 @@ function getAllAccounts(callback) {
         method: 'GET',
     }
     request(options, function(error, response, body) {
-        console.log("vikasffff1");
         callback(response.body);
     });
 }
@@ -66,7 +62,6 @@ function getAccountByAccountId(id, callback) {
         method: 'GET',
     }
     request(options, function(error, response, body) {
-        console.log(JSON.parse(response.body));
         callback(JSON.parse(response.body));
     });
 }
@@ -86,7 +81,6 @@ function getAccountID(custid, type, callback) {
     getAllAccounts(function(alist) {
         alist = JSON.parse(alist);
         for (i = 0; i < alist.length; i++) {
-            // alist[i] = JSON.parse(alist[i]);
             if (custid == alist[i].customer_id && type == alist[i].type) {
                 callback(alist[i]._id)
             }
@@ -155,9 +149,6 @@ function getPurcahse(id, callback) {
         callback(response.body);
     });
 }
-// getAllCustomers(function(cust) {
-//     console.log(cust);
-// });
 
 function getAllTransfers(id, callback) {
     options = {
@@ -205,34 +196,6 @@ function deposit(id, data, callback) {
     })
 }
 
-/*
-var sample_data = 
-{"medium": "balance",
-"payee_id": "59fe03c8b390353c953a1c03",
-"amount": 100,
-"transaction_date": "2017-11-04",
-"description": "string"}
-
-createTransfer("59fe0589b390353c953a1c0c",sample_data,function(body){
-    console.log(body)
-})
-
-*/
-/*
-getCustomer(id, function(cust) {
-    console.log(cust);
-});
-*/
-
-/*
-getCustomerID("Vikas","Pandey",function(body){
-    console.log(body)
-})
-*/
-
-// getAllMerchants(function(body){
-//     console.log(body)
-// })
 exports.getCustomer = getCustomer;
 exports.createTransfer = createTransfer;
 exports.getTransfer = getTransfer;

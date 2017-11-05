@@ -104,9 +104,10 @@ function getMerchant(id, callback) {
 
 function makePurchase(accountID, data, callback) {
     options = {
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
         url: `${url_root}/accounts/${accountID}/purchases?key=${api_key}`,
         method: 'POST',
-        body: data
+        body: JSON.stringify(data)
     }
     request(options, function(error, response, body) {
         callback(response.body);

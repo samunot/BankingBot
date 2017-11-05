@@ -33,6 +33,9 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
         bot.reply(message, 'Hi' + '<@' + message.user + '>..Let\'s get started \n Type exit at any moment to quit the chat.');
         convo.addQuestion("Test-1", function(answer, convo) {
             bot.reply(message, "Thanks for your reply" + answer.text);
+            var merchants = []
+            capital.getAllMerchants
+            capital.makePurchase()
             convo.next();
         })
         convo.on('end', function(convo) {

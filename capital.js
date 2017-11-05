@@ -55,7 +55,7 @@ function getAccount(id, callback) {
         method: 'GET',
     }
     request(options, function(error, response, body) {
-        callback(response.body);
+        callback(JSON.parse(response.body));
     });
 }
 

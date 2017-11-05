@@ -19,7 +19,7 @@ var username = null;
 
 
 
-controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
+/*controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
     started = true;
     userName = message.user;
     // slackUser.getName(message.user, function(name) {
@@ -45,7 +45,7 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
             }
         })
     });
-});
+});*/
 
 
 controller.hears('Transfer money', 'direct_mention,direct_message', function(bot, message) {
@@ -204,5 +204,46 @@ controller.hears('Transfer money', 'direct_mention,direct_message', function(bot
     })
 
 
+
+});
+
+controller.hears('Give account summary', 'direct_mention,direct_message', function(bot, message) {
+    started = true;
+    userName = message.user;
+    // slackUser.getName(message.user, function(name) {
+    //     if (name) {
+    //         userName = name;
+
+    //     }
+    // });
+
+    slack.getFullName(userName, function(fullName) {
+        if (fullName != null) {
+            var firstlast = fullName.split(" ");
+            var firstNameSender = firstlast[0];
+            var lastNameSender = firstlast[1];
+            var senderCustomerID = null
+            capital.getCustomerID(firstNameSender, lastNameSender, function(customerId) {
+                if (customerId != null) {
+
+                    senderCustomerID = customerId;
+                }
+                capital.getAccount(senderCustomerID, function(acc_details){
+                    bot.startConversation(message, function(err, convo)){
+                        for (account in acc_details) {
+                            bot.reply(message, "Account Number: " + account.account_number + "\nType: " + account.type + "\nBalance: " + account.balance);
+                        }
+
+                        convo.on('end', function(convo) {
+                            if (convo.status == "completed") {
+                                bot.reply(message, "-----------");
+                                convo.stop();
+                            }
+                        })
+                    }
+                })
+            })
+        }
+    })
 
 });

@@ -55,7 +55,7 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
                 bot.startConversation(message, function(err, convo) {
                     bot.reply(message, 'Hi' + '<@' + message.user + '>..Let\'s get started \n Type exit at any moment to quit the chat.');
                     convo.addQuestion("Generate Transactions", function(answer, convo) {
-                        bot.reply(message, "Dine");
+                        bot.reply(message, "Done");
                         var merchants = []
                         capital.getAccountID(senderCustomerID, "Credit Card", function(accid) {
                             if (accid != null) {
@@ -233,34 +233,28 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
                 capital.getAccount(senderCustomerID, function(acc_details) {
                     bot.startConversation(message, function(err, convo) {
                         console.log(acc_details);
-                        bot.reply(message, "Account Number: \tType: \tBalance ");
+                        //bot.reply(message, "Account Number: \tType: \t\tBalance "); 
 
-
-
-                        // instantiate 
-                        var table = new Table({
-                            head: ['Account Number', 'Type', 'Balance'],
-                            colWidths: [100, 200]
-                        });
 
 
 
                         async.eachSeries(acc_details, function(acc, callback) {
                             //console.log(expert);
-                            table.push(acc_details[i].account_number, acc_details[i].type, acc_details[i].balance, function() {
+                            bot.reply(message, "Account number: " + acc.account_number + "\n Account type: " + acc.type + "\n Balance: " + acc.balance, function() {
                                 callback();
                             });
                             // Alternatively: callback(new Error());
                         }, function(callback) {
-                            console.log(table);
-                            bot.reply(message, table);
+
+                            bot.reply(message, "Spend more.. Save more..:heavy_dollar_sign::smile:");
+                            convo.stop();
+
+
                         })
-                        convo.on('end', function(convo) {
-                            if (convo.status == "completed") {
-                                bot.reply(message, "-----------");
-                                convo.stop();
-                            }
-                        })
+
+
+
+
                     })
                 })
             })

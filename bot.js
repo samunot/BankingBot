@@ -1,5 +1,5 @@
 var capital = require("./capital.js");
-var slackToken = "xoxb-267111720244-Nl7zxAi7wOteksaniPdDKAqE";
+var slackToken = "xoxb-267111720244-RctjaRLU8hoa3edv4Ouvn5tE";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
 var controller = Botkit.slackbot({
@@ -15,8 +15,9 @@ controller.spawn({
 var started = false;
 var username = null;
 
-
-
+function getRandom() {
+    return Math.random() * (100 - 1) + 1;
+}
 
 
 controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
@@ -28,23 +29,79 @@ controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
 
     //     }
     // });
+    slack.getFullName(userName, function(fullName) {
+        if (fullName != null) {
+            var firstlast = fullName.split(" ");
+            var firstName = firstlast[0];
+            var lastName = firstlast[1];
+            var senderCustomerID = null
+                // var recieverCustomerID = null
+            capital.getCustomerID(firstName, lastName, function(customerId) {
+                if (customerId != null) {
 
-    bot.startConversation(message, function(err, convo) {
-        bot.reply(message, 'Hi' + '<@' + message.user + '>..Let\'s get started \n Type exit at any moment to quit the chat.');
-        convo.addQuestion("Test-1", function(answer, convo) {
-            bot.reply(message, "Thanks for your reply" + answer.text);
-            var merchants = []
-            capital.getAllMerchants
-            capital.makePurchase()
-            convo.next();
-        })
-        convo.on('end', function(convo) {
-            if (convo.status == "completed") {
-                bot.reply(message, "End of test");
-                convo.stop();
-            }
-        })
-    });
+                    senderCustomerID = customerId;
+                }
+
+                bot.startConversation(message, function(err, convo) {
+                    bot.reply(message, 'Hi' + '<@' + message.user + '>..Let\'s get started \n Type exit at any moment to quit the chat.');
+                    convo.addQuestion("Test-1", function(answer, convo) {
+                        bot.reply(message, "Thanks for your reply" + answer.text);
+                        var merchants = []
+                        capital.getAccountID(senderCustomerID, "Credit Card", function(accid) {
+                            if (accid != null) {
+                                senderAccountID = accid;
+
+                                capital.getAllMerchants(function(body) {
+                                    body = JSON.parse(body)
+                                    for (i = 0; i < body.data.length; i++) {
+                                        merchants.push(body.data[i]._id);
+                                    }
+                                    for (i = 0; i < 10; i++) {
+                                        pos = Math.floor(Math.random() * merchants.length);
+                                        val = getRandom()
+                                        ceil = Math.ceil(val)
+                                        save = ceil - val
+                                        body = {
+                                            "merchant_id": merchants[pos],
+                                            "medium": "balance",
+                                            // "purchase_date": "2017-11-05",
+                                            "amount": ceil
+                                        }
+                                        capital.makePurchase(senderAccountID, body, function(body) {
+                                            capital.getAccountID(senderCustomerID, "Savings", function(saveID) {
+                                                capital.deposit(saveID, { medium: "balance", amount: save }, function(body) {
+                                                    console.log(body)
+                                                })
+                                            })
+                                        })
+                                    }
+                                    capital.getAccountID(senderCustomerID, "Savings", function(saveID) {
+                                        capital.getAccount(saveID, function(body) {
+                                            body = JSON.parse(body)
+                                            if (body.balance >= target) {
+                                                bot.say()
+                                            }
+                                        })
+                                    })
+                                    convo.next();
+                                })
+                            }
+
+
+                        })
+                    })
+                    convo.on('end', function(convo) {
+                        if (convo.status == "completed") {
+                            bot.reply(message, "End of test");
+                            convo.stop();
+                        }
+                    })
+
+
+                })
+            })
+        }
+    })
 });
 
 

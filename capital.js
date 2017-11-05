@@ -180,6 +180,19 @@ function createTransfer(id, data, callback) {
     })
 }
 
+function deposit(id, data, callback) {
+    var options = {
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        url: `${url_root}/accounts/${id}/deposits?key=${api_key}`,
+        method: 'POST',
+        body: JSON.stringify(data)
+    }
+    request(options, function(error, response, body) {
+        console.log(response.body);
+        callback(JSON.parse(response.body));
+    })
+}
+
 /*
 var sample_data = 
 {"medium": "balance",
@@ -204,6 +217,10 @@ getCustomerID("Vikas","Pandey",function(body){
     console.log(body)
 })
 */
+
+// getAllMerchants(function(body){
+//     console.log(body)
+// })
 exports.getCustomer = getCustomer;
 exports.createTransfer = createTransfer;
 exports.getTransfer = getTransfer;
@@ -223,3 +240,5 @@ exports.getCustomer = getCustomer;
 exports.getAllAccounts = getAllAccounts;
 exports.getAccount = getAccount;
 exports.getAllCustomers = getAllCustomers;
+
+exports.deposit = deposit;

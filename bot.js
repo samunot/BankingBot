@@ -3,7 +3,6 @@ var async = require('async');
 var slackToken = "xoxb-267111720244-y8buNECTAQMNJox8f6zrRF4M";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
-var coupons = couponsdb.data;
 var controller = Botkit.slackbot({
     debug: false
 });

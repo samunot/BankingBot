@@ -16,7 +16,13 @@ The bot implements the following features:<br>
 2. Understanding and implementation of chat bot on Slack.<br>
 3. Keeping the bot simple and easy to use.</p>
 
-<h3> Scope </h3>
+<h3> Learning and Accomplishment </h3>
+<p>
+- We successfully implemented the chat bot implementation and in process understood, how to think as customers/end users while development.
+- How to explore new API's so that you can use them efficiently during application development. <br>
+</p>
+
+<h3> Furure Scope </h3>
 <p>
 - Allow customers to manage multiple accounts across multiple banks and generate statements.<br>
 - Currently the existing friend circles are restricted to one bank. Future scope is to allow customers to have friend circle across multiple banks.<br>

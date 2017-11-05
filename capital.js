@@ -55,7 +55,19 @@ function getAccount(id, callback) {
         method: 'GET',
     }
     request(options, function(error, response, body) {
-        callback(response.body);
+        console.log(JSON.parse(response.body));
+        callback(JSON.parse(response.body));
+    });
+}
+
+function getAccountByAccountId(id, callback) {
+    options = {
+        url: `${url_root}/accounts/${id}?key=${api_key}`,
+        method: 'GET',
+    }
+    request(options, function(error, response, body) {
+        console.log(JSON.parse(response.body));
+        callback(JSON.parse(response.body));
     });
 }
 
@@ -241,4 +253,8 @@ exports.getAllAccounts = getAllAccounts;
 exports.getAccount = getAccount;
 exports.getAllCustomers = getAllCustomers;
 
+<<<<<<< HEAD
 exports.deposit = deposit;
+=======
+exports.getAccountByAccountId = getAccountByAccountId;
+>>>>>>> 79edbc8d38ae6e295c291b5adf5fe9d1ab11c1dd

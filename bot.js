@@ -1,4 +1,9 @@
-var capital = require("./capital.js");
+var capital = require("./capital.js"); <<
+<< << < HEAD
+    ===
+    === =
+    var async = require('async'); >>>
+>>> > 79e dbc8d38ae6e295c291b5adf5fe9d1ab11c1dd
 var slackToken = "xoxb-267111720244-RctjaRLU8hoa3edv4Ouvn5tE";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
@@ -18,9 +23,12 @@ var username = null;
 function getRandom() {
     return Math.random() * (100 - 1) + 1;
 }
+var ids = ['59fe647cb390353c953a1e81', '59fe64a6b390353c953a1e83', '59fe64beb390353c953a1e84', '59fe64d3b390353c953a1e85'];
+var names = ['Vikas Pandey', 'Shubham Munot', 'Harsha Reddy', 'Rishi Jain'];
 
 
-controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
+
+/*controller.hears('hi', 'direct_mention,direct_message', function(bot, message) {
     started = true;
     userName = message.user;
     // slackUser.getName(message.user, function(name) {
@@ -262,4 +270,109 @@ controller.hears('Transfer money', 'direct_mention,direct_message', function(bot
 
 
 
+});
+
+controller.hears('Give account summary', 'direct_mention,direct_message', function(bot, message) {
+    started = true;
+    userName = message.user;
+    // slackUser.getName(message.user, function(name) {
+    //     if (name) {
+    //         userName = name;
+
+    //     }
+    // });
+
+    slack.getFullName(userName, function(fullName) {
+        if (fullName != null) {
+            var firstlast = fullName.split(" ");
+            var firstNameSender = firstlast[0];
+            var lastNameSender = firstlast[1];
+            var senderCustomerID = null
+            capital.getCustomerID(firstNameSender, lastNameSender, function(customerId) {
+                if (customerId != null) {
+
+                    senderCustomerID = customerId;
+                }
+                capital.getAccount(senderCustomerID, function(acc_details){
+                    bot.startConversation(message, function(err, convo){
+                        console.log(acc_details);
+                        bot.reply(message, "Account Number: \tType: \tBalance "); 
+                        
+                        var Table = require('cli-table');
+                        
+                       // instantiate 
+                       var table = new Table({
+                           head: ['Account Number', 'Type', 'Balance']
+                         , colWidths: [100, 200]
+                       });
+                        
+                       
+                       
+                        async.eachSeries(acc_details, function(acc, callback) {
+                            //console.log(expert);
+                            table.push(acc_details[i].account_number, acc_details[i].type , acc_details[i].balance, function(){
+                                callback();
+                            });
+                            // Alternatively: callback(new Error());
+                        }, function(callback){
+                            console.log(table);
+                            bot.reply(message,table);
+                        })
+                        
+                       
+
+                        convo.on('end', function(convo) {
+                            if (convo.status == "completed") {
+                                bot.reply(message, "-----------");
+                                convo.stop();
+                            }
+                        })
+                    })
+                })
+            })
+        }
+    })
+
+});
+
+
+
+controller.hears('What about my Savings Circle?', 'direct_mention,direct_message', function(bot, message) {
+    
+    userName = message.user;
+    // slackUser.getName(message.user, function(name) {
+    //     if (name) {
+    //         userName = name;
+
+    //     }
+    // });
+    
+    bot.startConversation(message, function(err, convo) {
+
+        var savingDetails=[];
+        var i=0;
+        async.eachSeries(ids, function(id_each, callback){
+            capital.getAccountID(id_each, "Savings", function(acc_id){
+                capital.getAccountByAccountId(acc_id, function(response){
+                    bot.reply(message,names[i++]+" : "+ response.balance, function(){
+                        callback();
+                    });
+                    
+                })
+                
+            })
+        }, function(callback){
+            
+                    bot.reply(message, "Spend more.. Save more..:)");
+                    convo.stop();
+                
+            
+        })
+
+        
+        
+
+       
+        
+    });
 });

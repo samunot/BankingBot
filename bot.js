@@ -1,5 +1,6 @@
 var capital = require("./capital.js");
-var slackToken = "xoxb-267111720244-Nl7zxAi7wOteksaniPdDKAqE";
+var async = require('async');
+var slackToken = "xoxb-267111720244-RctjaRLU8hoa3edv4Ouvn5tE";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
 var controller = Botkit.slackbot({
@@ -15,7 +16,8 @@ controller.spawn({
 var started = false;
 var username = null;
 
-
+var ids = ['59fe647cb390353c953a1e81','59fe64a6b390353c953a1e83','59fe64beb390353c953a1e84','59fe64d3b390353c953a1e85'];
+var names=['Vikas Pandey','Shubham Munot','Harsha Reddy','Rishi Jain'];
 
 
 
@@ -229,10 +231,32 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
                     senderCustomerID = customerId;
                 }
                 capital.getAccount(senderCustomerID, function(acc_details){
-                    bot.startConversation(message, function(err, convo)){
-                        for (account in acc_details) {
-                            bot.reply(message, "Account Number: " + account.account_number + "\nType: " + account.type + "\nBalance: " + account.balance);
-                        }
+                    bot.startConversation(message, function(err, convo){
+                        console.log(acc_details);
+                        bot.reply(message, "Account Number: \tType: \tBalance "); 
+                        
+                        var Table = require('cli-table');
+                        
+                       // instantiate 
+                       var table = new Table({
+                           head: ['Account Number', 'Type', 'Balance']
+                         , colWidths: [100, 200]
+                       });
+                        
+                       
+                       
+                        async.eachSeries(acc_details, function(acc, callback) {
+                            //console.log(expert);
+                            table.push(acc_details[i].account_number, acc_details[i].type , acc_details[i].balance, function(){
+                                callback();
+                            });
+                            // Alternatively: callback(new Error());
+                        }, function(callback){
+                            console.log(table);
+                            bot.reply(message,table);
+                        })
+                        
+                       
 
                         convo.on('end', function(convo) {
                             if (convo.status == "completed") {
@@ -240,10 +264,52 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
                                 convo.stop();
                             }
                         })
-                    }
+                    })
                 })
             })
         }
     })
 
+});
+
+
+
+controller.hears('What about my Savings Circle?', 'direct_mention,direct_message', function(bot, message) {
+    
+    userName = message.user;
+    // slackUser.getName(message.user, function(name) {
+    //     if (name) {
+    //         userName = name;
+
+    //     }
+    // });
+    
+    bot.startConversation(message, function(err, convo) {
+
+        var savingDetails=[];
+        var i=0;
+        async.eachSeries(ids, function(id_each, callback){
+            capital.getAccountID(id_each, "Savings", function(acc_id){
+                capital.getAccountByAccountId(acc_id, function(response){
+                    bot.reply(message,names[i++]+" : "+ response.balance, function(){
+                        callback();
+                    });
+                    
+                })
+                
+            })
+        }, function(callback){
+            
+                    bot.reply(message, "Spend more.. Save more..:)");
+                    convo.stop();
+                
+            
+        })
+
+        
+        
+
+       
+        
+    });
 });

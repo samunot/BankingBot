@@ -24,5 +24,8 @@ The bot implements the following features:<br>
 </p>
 
 <h3> Links </h3>
-<p> <a href="https://nodejs.org/api/modules.html">Node.js modules</a>
+<p> <a href="https://nodejs.org/api/modules.html">Node.js modules</a><br>
+<a href="https://api.slack.com/">Slack API</a><br>
+<a href="http://api.reimaginebanking.com/">Nessie API</a><br>
+<a href="https://stackoverflow.com/">Our Common Friend</a>
 </p>

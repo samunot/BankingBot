@@ -18,8 +18,8 @@ The bot implements the following features:<br>
 
 <h3> Learning and Accomplishment </h3>
 <p>
-- We successfully implemented the chat bot implementation and in process understood, how to think as customers/end users while development.
-- How to explore new API's so that you can use them efficiently during application development. <br>
+- We successfully implemented the chat bot implementation and in process understood, how to think as customers/end users while development.<br>
+- How to explore new API's so that you can use them efficiently during application development. 
 </p>
 
 <h3> Furure Scope </h3>

@@ -1,6 +1,6 @@
 var capital = require("./capital.js");
 var async = require('async');
-var slackToken = "xoxb-267111720244-RctjaRLU8hoa3edv4Ouvn5tE";
+var slackToken = "xoxb-267111720244-y8buNECTAQMNJox8f6zrRF4M";
 var slack = require("./slack.js");
 var Botkit = require('botkit');
 var controller = Botkit.slackbot({
@@ -233,37 +233,28 @@ controller.hears('Give account summary', 'direct_mention,direct_message', functi
                 capital.getAccount(senderCustomerID, function(acc_details){
                     bot.startConversation(message, function(err, convo){
                         console.log(acc_details);
-                        bot.reply(message, "Account Number: \tType: \tBalance "); 
+                        //bot.reply(message, "Account Number: \tType: \t\tBalance "); 
                         
-                        var Table = require('cli-table');
-                        
-                       // instantiate 
-                       var table = new Table({
-                           head: ['Account Number', 'Type', 'Balance']
-                         , colWidths: [100, 200]
-                       });
                         
                        
                        
                         async.eachSeries(acc_details, function(acc, callback) {
                             //console.log(expert);
-                            table.push(acc_details[i].account_number, acc_details[i].type , acc_details[i].balance, function(){
+                            bot.reply(message, "Account number: "+acc.account_number + "\n Account type: " + acc.type + "\n Balance: " + acc.balance, function(){
                                 callback();
                             });
                             // Alternatively: callback(new Error());
                         }, function(callback){
-                            console.log(table);
-                            bot.reply(message,table);
+                            
+                                    bot.reply(message, "Spend more.. Save more..:heavy_dollar_sign::smile:");
+                                    convo.stop();
+                                
+                            
                         })
                         
                        
 
-                        convo.on('end', function(convo) {
-                            if (convo.status == "completed") {
-                                bot.reply(message, "-----------");
-                                convo.stop();
-                            }
-                        })
+                        
                     })
                 })
             })
